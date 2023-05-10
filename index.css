@@ -1,6 +1,6 @@
 .game-board {
-  width: 602px;
-  height: 602px;
+  width: 601px;
+  height: 601px;
   border: 2px solid black;
   position: relative;
   top: 50px;
@@ -15,8 +15,8 @@
 }
 
 .game-piece {
-  width: 200px;
-  height: 200px;
+  width: 199px;
+  height: 199px;
   border: 1px solid black;
   position: absolute;
   overflow: hidden;
@@ -24,6 +24,8 @@
 
 .game-piece.complete {
   border-color: transparent;
+  width: 200px;
+  height: 200px;
 }
 
 .game-piece > img {
