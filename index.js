@@ -1,19 +1,72 @@
 const blankTile = document.getElementById("blank-tile")
 let isCheckingOn = false;
+let isComplete = false;
+let isSolving = false;
+let currentPiece = blankTile;
+const moves = [];
+
+function stopSolving() {
+  isSolving = false;
+}
+
+function getValidNeighbours(piece) {
+  const validNeighbours = [];
+
+  document.querySelectorAll(".game-piece").forEach(tile => {
+    if (tile.id === "blank-tile") return;
+    if (tile === piece) return;
+    const blankRow = Number(blankTile.classList[blankTile.classList.length -2].replace("row-",""));
+    const blankCol = Number(blankTile.classList[blankTile.classList.length -1].replace("col-",""));;
+    const tileRow = Number(tile.classList[tile.classList.length -2].replace("row-",""));
+    const tileCol = Number(tile.classList[tile.classList.length -1].replace("col-",""));
+    const rowDiff = Math.abs(tileRow - blankRow);
+    const colDiff = Math.abs(tileCol - blankCol);
+    if ((rowDiff === 1 && colDiff === 0) || (rowDiff === 0 && colDiff === 1)) {
+      validNeighbours.push(tile);
+    }
+  })
+  // console.log(validNeighbours);
+  return validNeighbours;
+}
 
 function scrambleTiles() {
   const tiles = document.querySelectorAll(".game-piece");
-  for (let i = 0; i < 100; i++) {
-    const index = Math.floor(Math.random() * tiles.length);
-    movePiece(tiles[index]);
+  for (let i = 0; i < 50; i++) {
+    const validNeighbours = getValidNeighbours(currentPiece);
+    // console.log(validNeighbours);
+    currentPiece = validNeighbours[Math.floor(Math.random() * validNeighbours.length)];
+    movePiece(currentPiece);
   }
   isCheckingOn = true;
+  console.log(moves);
+}
+
+function solvePuzzle() {
+  // alert("clicked");
+  isSolving = true;
+  setInterval(() => {
+    // console.log("Solving");
+    if (!isComplete && isSolving) {
+      // const tiles = document.querySelectorAll(".game-piece");
+      // const index = Math.floor(Math.random() * tiles.length);
+      // const tile = tiles[index];
+      // // console.log(tile);
+      // // console.log(currentPiece);
+      // // console.log(tile === currentPiece);
+      // // if (tile !== currentPiece) {
+      // //   currentPiece = tile;
+      // //   movePiece(currentPiece);  
+      // // }
+      // movePiece(tile);  
+      movePiece(document.querySelector("." + moves.pop()));
+    }
+  }, 200)
 }
 
 function checkIfGameComplete() {
   // alert(querySelectorAll("game-piece"))
   
-  let isComplete = true;
+  isComplete = true;
   document.querySelectorAll(".game-piece").forEach(piece => {
     // alert(piece.dataset.finalRow);
     // alert("A");
@@ -58,6 +111,9 @@ function movePiece(piece) {
   
   if (rowDiff === 1 && colDiff === 0) {
     // alert("Can slide");
+    if (!isSolving) {
+      moves.push(piece.classList[1]);
+    }
     piece.classList.remove(piece.classList[piece.classList.length -1]);
     piece.classList.remove(piece.classList[piece.classList.length -1]);
     piece.classList.add("row-" + blankRow);
@@ -69,8 +125,12 @@ function movePiece(piece) {
     if (isCheckingOn) {
       checkIfGameComplete();
     }
+    // console.log(moves);
   } else if (rowDiff === 0 && colDiff === 1) {
     // alert("Can slide");
+    if (!isSolving) {
+      moves.push(piece.classList[1]);
+    }
     piece.classList.remove(piece.classList[piece.classList.length -1]);
     piece.classList.remove(piece.classList[piece.classList.length -1]);
     piece.classList.add("row-" + blankRow);
@@ -82,6 +142,7 @@ function movePiece(piece) {
     if (isCheckingOn) {
       checkIfGameComplete();
     }
+    // console.log(moves);
   }
 }
 
