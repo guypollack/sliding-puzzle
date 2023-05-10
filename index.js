@@ -38,7 +38,7 @@ function scrambleTiles() {
     movePiece(currentPiece);
   }
   isCheckingOn = true;
-  console.log(moves);
+  // console.log(moves);
 }
 
 function solvePuzzle() {
